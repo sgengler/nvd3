@@ -5940,7 +5940,13 @@ nv.models.line = function() {
                 .style('fill-opacity', function(d) { return d.fillOpacity || .5});
 
             var areaPaths = groups.selectAll('path.nv-area')
-                .data(function(d) { return isArea(d) ? [d] : [] }); // this is done differently than lines because I need to check if series is an area
+              .data(function(d) {
+                  if(d.scatter === true || d.hidden === true) {
+                    d3.select(this.parentNode).classed('transparent', true);
+                  }
+                  return isArea(d) ? [d] : []
+                }); // this is done differently than lines because I need to check if series is an area
+
             areaPaths.enter().append('path')
                 .attr('class', 'nv-area')
                 .attr('d', function(d) {
@@ -6106,13 +6112,14 @@ nv.models.lineChart = function() {
         , noData = null
         , dispatch = d3.dispatch('tooltipShow', 'tooltipHide', 'brush', 'stateChange', 'changeState', 'renderEnd')
         , duration = 250
+        , clipEdge = false
         ;
 
     // set options on sub-objects for this chart
     xAxis.orient('bottom').tickPadding(7);
     yAxis.orient(rightAlignYAxis ? 'right' : 'left');
 
-    lines.clipEdge(true).duration(0);
+    lines.clipEdge(clipEdge).duration(0);
     lines2.interactive(false);
     // We don't want any points emitted for the focus chart's scatter graph.
     lines2.pointActive(function(d) { return false; });

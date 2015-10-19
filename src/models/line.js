@@ -113,7 +113,13 @@ nv.models.line = function() {
                 .style('fill-opacity', function(d) { return d.fillOpacity || .5});
 
             var areaPaths = groups.selectAll('path.nv-area')
-                .data(function(d) { return isArea(d) ? [d] : [] }); // this is done differently than lines because I need to check if series is an area
+              .data(function(d) {
+                  if(d.scatter === true || d.hidden === true) {
+                    d3.select(this.parentNode).classed('transparent', true);
+                  }
+                  return isArea(d) ? [d] : []
+                }); // this is done differently than lines because I need to check if series is an area
+
             areaPaths.enter().append('path')
                 .attr('class', 'nv-area')
                 .attr('d', function(d) {

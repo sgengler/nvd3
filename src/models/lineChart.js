@@ -41,13 +41,14 @@ nv.models.lineChart = function() {
         , noData = null
         , dispatch = d3.dispatch('tooltipShow', 'tooltipHide', 'brush', 'stateChange', 'changeState', 'renderEnd')
         , duration = 250
+        , clipEdge = false
         ;
 
     // set options on sub-objects for this chart
     xAxis.orient('bottom').tickPadding(7);
     yAxis.orient(rightAlignYAxis ? 'right' : 'left');
 
-    lines.clipEdge(true).duration(0);
+    lines.clipEdge(clipEdge).duration(0);
     lines2.interactive(false);
     // We don't want any points emitted for the focus chart's scatter graph.
     lines2.pointActive(function(d) { return false; });
