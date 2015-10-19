@@ -2,6 +2,7 @@ This is a forked version of https://github.com/novus/nvd3 with a few improvement
 
 ## Tooltips 
 - Hides tooltip key when values does not fall in currently hovered area
+- Fix bug where tooltips using $s formating caused long decimal ($20.203402342k)
 
 ## Line Chart
 - Add support for area bottom values (y1)
