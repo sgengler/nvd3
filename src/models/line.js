@@ -131,6 +131,9 @@ nv.models.line = function() {
 
             areaPaths.watchTransition(renderWatch, 'line: areaPaths')
                 .attr('d', function(d) {
+                    if(d.valuesLow) {
+                      var valuesLow = d.valuesLow;
+                    }
                     return d3.svg.area()
                         .interpolate(interpolate)
                         .defined(defined)
@@ -138,11 +141,17 @@ nv.models.line = function() {
                         .y0(function(d,i) { return nv.utils.NaNtoZero(y(getY(d,i))) })
                         .y1(function(d,i) { return y( y.domain()[0] <= 0 ? y.domain()[1] >= 0 ? 0 : y.domain()[1] : y.domain()[0] ) })
                         //.y1(function(d,i) { return y0(0) }) //assuming 0 is within y domain.. may need to tweak this
+                        .y1(function(d,i) { return valuesLow ? y( valuesLow[i][1] ) : y( 0 ) })
                         .apply(this, [d.values])
                 });
 
             var linePaths = groups.selectAll('path.nv-line')
-                .data(function(d) { return [d.values] });
+              .data(function(d) { //CHANGE
+                if(d.scatter === true || d.hidden === true) {
+                  d3.select(this.parentNode).classed('transparent', true);
+                }
+                return [d.values]
+              })
 
             linePaths.enter().append('path')
                 .attr('class', 'nv-line')

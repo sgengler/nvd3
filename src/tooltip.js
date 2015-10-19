@@ -109,7 +109,13 @@ nv.models.tooltip = function() {
 
         trowEnter.append("td")
             .classed("value",true)
-            .html(function(p, i) { return valueFormatter(p.value, i) });
+            .html(function(p, i) { //CHANGE
+              if(valueFormatter(p.value, i)[0] === '$') {
+                return d3.format('$,.0f')(p.value);
+              } else {
+                return valueFormatter(p.value, i);
+              }
+            });
 
         trowEnter.selectAll("td").each(function(p) {
             if (p.highlight) {

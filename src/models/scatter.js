@@ -352,6 +352,16 @@ nv.models.scatter = function() {
                 }
             }
 
+            var scatterClass = function(d) {
+      				if(!d.scatter) {return false}
+      				var amt = d.values.length;
+      				if(amt < 25) {return 'scatter-sm'}
+      				if(amt < 50) {return 'scatter-md'}
+      				if(amt < 100) {return 'scatter-lg'}
+      				if(amt < 150) {return 'scatter-xl'}
+      				return 'scatter-xl';
+      			}
+
             needsUpdate = true;
             var groups = wrap.select('.nv-groups').selectAll('.nv-group')
                 .data(function(d) { return d }, function(d) { return d.key });
@@ -360,11 +370,11 @@ nv.models.scatter = function() {
                 .style('fill-opacity', 1e-6);
             groups.exit()
                 .remove();
-            groups
-                .attr('class', function(d,i) {
-                    return (d.classed || '') + ' nv-group nv-series-' + i;
-                })
-                .classed('hover', function(d) { return d.hover });
+            groups //CHANGE
+      					.attr('class', function(d,i) {
+      						return 'nv-group nv-series-' + i + (d.scatter == true ? ' scatter-line ' + scatterClass(d) : ' ') + (d.singlePoint == true ? 'single-point' : '') ;
+      					})
+      					.classed('hover', function(d) { return d.hover });
             groups.watchTransition(renderWatch, 'scatter: groups')
                 .style('fill', function(d,i) { return color(d, i) })
                 .style('stroke', function(d,i) { return color(d, i) })
